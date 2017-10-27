@@ -1,0 +1,30 @@
+names in original and transposed name
+
+todayMenuBeverageType  -- supportedServices
+
+
+
+mocha  ---- Noida
+chai ---- Delhi
+size -- service
+	
+short --- Civil
+small --- Electrical
+medium --- Horticulture
+large --- Health
+
+orderBeverage -- takeComplaint
+
+
+beverageType --- complaintCity
+BeverageType  --- City
+
+beverageSize  ----  complaintType
+BeverageSize  ---  Type
+
+
+beverageTemp  -- complaintRegion
+BeverageTemp  --- Region
+
+menuItem  --- complaintRec
+
