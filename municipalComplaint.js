@@ -128,39 +128,39 @@ function takeComplaint(intentRequest, callback) {
 		// perform validation on the slot values we have
 		const slots = intentRequest.currentIntent.slots;
 
-		const beverageType = (slots.BeverageType ? slots.BeverageType : null);
-		const beverageSize = (slots.BeverageSize ? slots.BeverageSize : null);
-		const beverageTemp = (slots.BeverageTemp ? slots.BeverageTemp : null);
+		const complaintCity = (slots.City ? slots.City : null);
+		const complaintType = (slots.Type ? slots.Type : null);
+		const complaintRegion = (slots.Region ? slots.Region : null);
 
         
-        if(! (beverageType && (keyExists(beverageType, supportedServices))))
+        if(! (complaintCity && (keyExists(complaintCity, supportedServices))))
         {
-            var menuItem = buildResponseOptions(Object.keys(supportedServices));
+            var complaintRec = buildResponseOptions(Object.keys(supportedServices));
             
-            callback(elicitSlot(outputSessionAttributes, intentRequest.currentIntent.name, slots, 'BeverageType', 
-			    buildMessage('Sorry, but we can only do a Noida or a Mumbai. What kind of beverage would you like?'), 
-			    buildResponseCard("Menu", "Today's Menu", menuItem)));
+            callback(elicitSlot(outputSessionAttributes, intentRequest.currentIntent.name, slots, 'City', 
+			    buildMessage('Sorry, but we can only do a Noida or a Mumbai. How can we help in these cities?'), 
+			    buildResponseCard("City", "Available Services", complaintRec)));
 		}
 
-		// let's assume we only accept short, tall, grande, venti, small, medium, and large for now
-		if (!(beverageSize && beverageSize.match(/short|tall|grande|venti|small|medium|large/) && keyExists(beverageSize, supportedServices[beverageType].type))) 
+		// let's assume we only accept few complaint category for now
+		if (!(complaintType && complaintType.match(/Electrical|Civil|Horticulture|Health/) && keyExists(complaintType, supportedServices[complaintCity].type))) 
 		{
-		    if(beverageSize)
+		    if(complaintType)
 			{
-		        var sizeOfItem = buildResponseOptions(supportedServices[beverageType].type);
+		        var sizeOfItem = buildResponseOptions(supportedServices[complaintCity].type);
             
-			    callback(elicitSlot(outputSessionAttributes, intentRequest.currentIntent.name, slots, 'BeverageSize',
-			        buildMessage('Sorry, but we don\'t have this size; consider a small.  What service?'),
-			        buildResponseCard(`${beverageType}`, "available sizes", sizeOfItem)
+			    callback(elicitSlot(outputSessionAttributes, intentRequest.currentIntent.name, slots, 'Type',
+			        buildMessage('Sorry, but we don\'t cater to this city.  Keep watching this space for more'),
+			        buildResponseCard(`${complaintCity}`, "Cities", sizeOfItem)
 			    ));
 		    }else{
-		        callback(elicitSlot(outputSessionAttributes, intentRequest.currentIntent.name, slots, 'BeverageSize'));
+		        callback(elicitSlot(outputSessionAttributes, intentRequest.currentIntent.name, slots, 'Type'));
 		    }
 		}
 
 		// let's say we need to know temperature for Noidas
-		if (!(beverageTemp && beverageTemp.match(/kids|hot|iced/))) {
-			callback(elicitSlot(outputSessionAttributes, intentRequest.currentIntent.name, slots, 'BeverageTemp'));
+		if (!(complaintRegion && complaintRegion.match(/Noida|Mumbai/))) {
+			callback(elicitSlot(outputSessionAttributes, intentRequest.currentIntent.name, slots, 'municipalCity'));
 		}
 
 		// if we've come this far, then we simply defer to Lex
@@ -170,7 +170,7 @@ function takeComplaint(intentRequest, callback) {
 
 	callback(close(outputSessionAttributes, 'Fulfilled', {
 		contentType: 'PlainText',
-		content: `Great!  Your ${intentRequest.currentIntent.slots.BeverageType} will be available for pickup soon.  Thanks for using CoffeeBot!`
+		content: `Great!  Your ${intentRequest.currentIntent.slots.Type} has been noted and will be actioned soon.  Thanks for using GoodCitizen app!`
 	}));
 }
 // --------------- To be modified end-----------------------
